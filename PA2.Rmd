@@ -1,0 +1,48 @@
+---
+title: "###Storms and Severe weather"
+output: html_document
+---
+
+###### Storm and other severe weather events' impact problems on humans and economic impact
+###### Synopsis
+
+In this report, I collect the data related to storm and other severe weather events across the United States, run analysis and at the conclusion of this research
+I will present you with my findings.
+```{r, cache=TRUE}
+setwd("M:/ReproducibleResearch")
+if (!(file.exists("./StormData.csv.bz2")))
+  {
+     url <- "http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+     download.file(url, destfile = "./StormData.csv.bz2")
+  } else storm.data <- read.csv(bzfile("StormData.csv.bz2"), header = TRUE, sep = ",")
+
+if (!"storm.data" %in% ls())
+  { 
+     storm.data <- read.csv(bzfile("StormData.csv.bz2"), header = TRUE, sep = ",")
+  }
+head(storm.data)
+str(storm.data) # looking at the dataframe structure 
+```
+
+###### Subsetting the data to columns of interests (fatalities, injuries, property  damage, and crop damage) 
+```{r data subset}
+library(dplyr)
+storm.subset <- select(storm.data, BGN_DATE, FATALITIES, INJURIES, EVTYPE, PROPDMG, CROPDMG, STATE)
+```
+###### Events resulting in fatalities
+```{r fatalities data}
+storm.fatalities <- aggregate(storm.subset$FATALITIES, by = list(storm.subset$EVTYPE), FUN = sum, na.rm = TRUE)
+names(storm.fatalities) <- c("EVENT_TYPE", "FATALITIES") # renaming the columns
+# Sorting data from the highest to lowest
+# Total fatalities by events
+fatalities.sorted <- arrange(storm.fatalities, desc(FATALITIES))
+# Top 10 death-causing events
+head(fatalities.sorted, 10) 
+# Bottom 10 death-causing events
+tail(fatalities.sorted, 10)
+```
+##### Graphical representation of the number of deaths by events
+```{r death graph}
+lbls <- paste(fatalities.sorted$EVENT_TYPE, "\n", fatalities.sorted$FATALITIES, sep = "")
+pie(fatalities.sorted$FATALITIES, labels = lbls, main = "Fatalities by events across the US")
+```
