@@ -1,4 +1,4 @@
-##### Reproducible_Research
+##### Reproducible Research
 This repository is about Reproducible Research in Data Science using R. The data used in this project is about storm and other weather events that can cause both public
 health and economic problems for communities and municipalities. This project involves exploring the US National Oceanic and Atmospheric Administration's storm database. 
 The data was collected between 1950 and 2011. 
